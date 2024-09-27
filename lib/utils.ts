@@ -1,5 +1,6 @@
 /* eslint-disable prefer-const */
 /* eslint-disable no-prototype-builtins */
+/* eslint-disable prefer-spread */
 import { type ClassValue, clsx } from "clsx";
 import qs from "qs";
 import { twMerge } from "tailwind-merge";
