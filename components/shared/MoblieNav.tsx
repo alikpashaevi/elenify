@@ -28,44 +28,41 @@ const MoblieNav = () => {
       </Link>
 
       <nav className='flex gap-2'>
-        <SignedIn>
-          <UserButton afterSignOutUrl='/'  />
-          <Sheet>
-            <SheetTrigger>
-              <Image 
-                src={menu}
-                alt="menu"
-                width={32}
-                height={32}
-                className='cursor-pointer'
-              />
-            </SheetTrigger>
-            <SheetContent className='sheet-content sm:w-64'>
-              <>
-                <Image src={logo} alt="logo" width={152} height={23} />
-                <ul className='header-nav-elements'>
-                  {navLinks.slice(0,6).map((link) => {
-                    const isActive = link.route === pathname;
+        <Sheet>
+          <SheetTrigger>
+            <Image 
+              src={menu}
+              alt="menu"
+              width={32}
+              height={32}
+              className='cursor-pointer'
+            />
+          </SheetTrigger>
+          <SheetContent className='sheet-content sm:w-64'>
+            <>
+              <Image src={logo} alt="logo" width={152} height={23} />
+              <ul className='header-nav-elements'>
+                {navLinks.slice(0,6).map((link) => {
+                  const isActive = link.route === pathname;
 
-                    return (
-                      <li key={link.label} className={`${isActive && 'gradient-text'} p-18 flex whitespace-nowrap text-dark-700`}>
-                        <Link href={link.route} className='sidebar-link cursor-pointer '>
-                          <Image src={link.icon} alt={link.label} width={24} height={24} />
-                          <span>{link.label}</span>
-                        </Link>
-                      </li>
-                    )
-                  })}
-                </ul>
-              </>
-            </SheetContent>
-          </Sheet>
-        </SignedIn>
-        <SignedOut>
+                  return (
+                    <li key={link.label} className={`${isActive && 'gradient-text'} p-18 flex whitespace-nowrap text-dark-700`}>
+                      <Link href={link.route} className='sidebar-link cursor-pointer '>
+                        <Image src={link.icon} alt={link.label} width={24} height={24} />
+                        <span>{link.label}</span>
+                      </Link>
+                    </li>
+                  )
+                })}
+              </ul>
+            </>
+          </SheetContent>
+        </Sheet>
+        {/* <SignedOut>
           <Button asChild className='button bg-purple-gradient bg-cover'>
             <Link href="/sign-in">Login</Link>
           </Button>
-        </SignedOut> 
+        </SignedOut>  */}
       </nav>
     </header>
   )
