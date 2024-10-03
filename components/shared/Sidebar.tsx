@@ -20,9 +20,22 @@ const Sidebar = () => {
           <Image src={logo} alt="logo" width={180} height={28} />
         </Link>
         <nav className='sidebar-nav'>
-          <SignedIn>
-            <ul className='sidebar-nav-elements'>
-              {navLinks.slice(0,6).map((link) => {
+          <ul className='sidebar-nav-elements'>
+            {navLinks.slice(0,6).map((link) => {
+              const isActive = link.route === pathname;
+
+              return (
+                <li key={link.label} className={`sidebar-nav_element group ${isActive ? 'bg-purple-gradient text-white' : "text-gray-700"}`}>
+                  <Link href={link.route} className='sidebar-link'>
+                    <Image src={link.icon} alt={link.label} width={24} height={24} className={` ${isActive && 'brightness-200'}`} />
+                    <span>{link.label}</span>
+                  </Link>
+                </li>
+              )
+            })}
+          </ul>
+          <ul className='sidebar-nav_elements'>
+              {navLinks.slice(6).map((link) => {
                 const isActive = link.route === pathname;
 
                 return (
@@ -34,30 +47,14 @@ const Sidebar = () => {
                   </li>
                 )
               })}
+              <li className=' cursor-pointer gap-2 p-4'>
+              </li>
             </ul>
-            <ul className='sidebar-nav_elements'>
-                {navLinks.slice(6).map((link) => {
-                  const isActive = link.route === pathname;
-
-                  return (
-                    <li key={link.label} className={`sidebar-nav_element group ${isActive ? 'bg-purple-gradient text-white' : "text-gray-700"}`}>
-                      <Link href={link.route} className='sidebar-link'>
-                        <Image src={link.icon} alt={link.label} width={24} height={24} className={` ${isActive && 'brightness-200'}`} />
-                        <span>{link.label}</span>
-                      </Link>
-                    </li>
-                  )
-                })}
-                <li className=' cursor-pointer gap-2 p-4'>
-                  <UserButton afterSignOutUrl='/' showName />
-                </li>
-              </ul>
-          </SignedIn>
-          <SignedOut>
+          {/* <SignedOut>
             <Button asChild className='button bg-purple-gradient bg-cover'>
               <Link href="/sign-in">Login</Link>
             </Button>
-          </SignedOut>    
+          </SignedOut>     */}
         </nav>
       </div>
     </aside>
