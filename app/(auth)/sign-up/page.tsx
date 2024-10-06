@@ -1,6 +1,7 @@
 "use client"
 import React, {useState} from 'react'
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const SignUpPage = () => {
 
@@ -8,6 +9,43 @@ const SignUpPage = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
+  const navigate = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if(password !== confirmPassword) {
+      setMessage('Passwords do not match');
+      return;
+    }
+    try {
+      const response = await fetch('http://localhost:4000/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+
+        // Store the token in localStorage
+        localStorage.setItem('token', data.accessToken);
+
+        // Set a success message or navigate
+        setMessage('Register successful');
+        navigate.push('/'); // Redirect to homepage or profile page
+
+      } else {
+        // Handle invalid credentials
+        const errorData = await response.json();
+        setMessage(errorData.message || 'Invalid username or password');
+      }
+    } catch (err: any) {
+      console.error(err.message);
+      setMessage('An error occurred. Please try again later.');
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center  px-20 py-12 rounded-md bg-white">
@@ -16,7 +54,7 @@ const SignUpPage = () => {
         <p className="inline mr-2">Sign In with Google:</p>
         <span className="bg-gray-100 px-3 py-1 rounded">G</span>
       </div>
-      <form className="w-full max-w-sm">
+      <form className="w-full max-w-sm" onSubmit={handleSubmit}>
         <input
           className="w-full px-3 py-2 mb-3 text-gray-700 border rounded"
           name='username'
@@ -35,7 +73,7 @@ const SignUpPage = () => {
         />
         <input
           className="w-full px-3 py-2 mb-3 text-gray-700 border rounded"
-          name='confirm-password'
+          name='confirmPassword'
           type="password"
           placeholder="Confirm Password"
           value={confirmPassword}

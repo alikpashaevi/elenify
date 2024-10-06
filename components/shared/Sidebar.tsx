@@ -1,9 +1,8 @@
 "use client"
-
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 
 import logo from '../../public/assets/images/logo-text.svg'
 import { navLinks } from '../../constants' 
@@ -12,6 +11,36 @@ import { Button } from '../ui/button'
 
 const Sidebar = () => {
   const pathname = usePathname();
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  const checkLoginStatus = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setLoggedIn(false);
+        return;
+      }
+      const response = await fetch('http://localhost:4000/api/users', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      });
+      if (response.ok) {
+        setLoggedIn(true);
+      } else {
+        setLoggedIn(false);
+      }
+    } catch (error) {
+      console.error('Error checking login status:', error);
+      setLoggedIn(false);
+    }
+  }
+
+  useEffect(() => {
+    checkLoginStatus();
+  }, []);
 
   return (
     <aside className='sidebar'>
@@ -20,41 +49,40 @@ const Sidebar = () => {
           <Image src={logo} alt="logo" width={180} height={28} />
         </Link>
         <nav className='sidebar-nav'>
-          <ul className='sidebar-nav-elements'>
-            {navLinks.slice(0,6).map((link) => {
-              const isActive = link.route === pathname;
-
-              return (
-                <li key={link.label} className={`sidebar-nav_element group ${isActive ? 'bg-purple-gradient text-white' : "text-gray-700"}`}>
-                  <Link href={link.route} className='sidebar-link'>
-                    <Image src={link.icon} alt={link.label} width={24} height={24} className={` ${isActive && 'brightness-200'}`} />
-                    <span>{link.label}</span>
-                  </Link>
-                </li>
-              )
-            })}
-          </ul>
-          <ul className='sidebar-nav_elements'>
-              {navLinks.slice(6).map((link) => {
-                const isActive = link.route === pathname;
-
-                return (
-                  <li key={link.label} className={`sidebar-nav_element group ${isActive ? 'bg-purple-gradient text-white' : "text-gray-700"}`}>
-                    <Link href={link.route} className='sidebar-link'>
-                      <Image src={link.icon} alt={link.label} width={24} height={24} className={` ${isActive && 'brightness-200'}`} />
-                      <span>{link.label}</span>
-                    </Link>
-                  </li>
-                )
-              })}
-              <li className=' cursor-pointer gap-2 p-4'>
-              </li>
-            </ul>
-          {/* <SignedOut>
+          {loggedIn ? (
+            <>
+              <ul className='sidebar-nav-elements'>
+                {navLinks.slice(0,6).map((link) => {
+                  const isActive = link.route === pathname;
+                  return (
+                    <li key={link.label} className={`sidebar-nav_element group ${isActive ? 'bg-purple-gradient text-white' : "text-gray-700"}`}>
+                      <Link href={link.route} className='sidebar-link'>
+                        <Image src={link.icon} alt={link.label} width={24} height={24} className={` ${isActive && 'brightness-200'}`} />
+                        <span>{link.label}</span>
+                      </Link>
+                    </li>
+                  )
+                })}
+              </ul>
+              <ul className='sidebar-nav_elements'>
+                {navLinks.slice(6).map((link) => {
+                  const isActive = link.route === pathname;
+                  return (
+                    <li key={link.label} className={`sidebar-nav_element group ${isActive ? 'bg-purple-gradient text-white' : "text-gray-700"}`}>
+                      <Link href={link.route} className='sidebar-link'>
+                        <Image src={link.icon} alt={link.label} width={24} height={24} className={` ${isActive && 'brightness-200'}`} />
+                        <span>{link.label}</span>
+                      </Link>
+                    </li>
+                  )
+                })}
+              </ul>
+            </>
+          ) : (
             <Button asChild className='button bg-purple-gradient bg-cover'>
               <Link href="/sign-in">Login</Link>
             </Button>
-          </SignedOut>     */}
+          )}
         </nav>
       </div>
     </aside>
