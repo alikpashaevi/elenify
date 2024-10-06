@@ -12,6 +12,7 @@ const SignInPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
       const response = await fetch('http://localhost:4000/api/login', {
         method: 'POST',

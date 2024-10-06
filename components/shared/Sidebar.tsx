@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
-import logo from '../../public/assets/images/logo-text.svg'
+import logo from '../../public/logo-icon.png'
 import { navLinks } from '../../constants' 
 import { usePathname } from 'next/navigation'
 import { Button } from '../ui/button'
@@ -46,7 +46,8 @@ const Sidebar = () => {
     <aside className='sidebar'>
       <div className="flex size-full flex-col gap-4">
         <Link href="/" className='sidebar-logo'>
-          <Image src={logo} alt="logo" width={180} height={28} />
+          <Image src={logo} alt="logo" width={28} height={28} />
+          <h1 className='tracking-wider text-[36px] font-semibold text-purple-500 '>ELENIFY</h1>
         </Link>
         <nav className='sidebar-nav'>
           {loggedIn ? (

@@ -11,12 +11,23 @@ const SignUpPage = () => {
   const [message, setMessage] = useState('');
   const navigate = useRouter();
 
+  // const validatePassword = (password: string) => {
+  //   var regex = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+  //   return regex.test(password);
+  // };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if(password !== confirmPassword) {
       setMessage('Passwords do not match');
       return;
     }
+
+    // if (!validatePassword(password)) {
+    //   setMessage('Password must contain at least one capital letter, one symbol, one number, and be at least 8 characters long.');
+    //   return;
+    // }
+
     try {
       const response = await fetch('http://localhost:4000/api/register', {
         method: 'POST',
