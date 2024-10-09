@@ -24,8 +24,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
-import { useState } from "react"
-import { AspectRatioKey } from "../../lib/utils"
+import { useState, useTransition } from "react"
+import { AspectRatioKey, debounce, deepMergeObjects } from "../../lib/utils"
 
 export const formSchema = z.object({
   title: z.string(),
@@ -43,6 +43,8 @@ const TransformationForm = ({action, data = null, userId, type, creditBalance, c
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isTransforming, setIsTransforming] = useState(false);
   const [transformationConfig, setTransformationConfig] = useState(config);
+
+  const [isPending, startTransition] = useTransition()
 
   const initailValues = data && action === "Update" ? {
     title: data?.title,
@@ -65,15 +67,42 @@ const TransformationForm = ({action, data = null, userId, type, creditBalance, c
     }
 
     const onSelectFieldHandler = (value: string, onChangeField: (value: string) => void) => {
-      
+      const imageSize = aspectRatioOptions[value as AspectRatioKey];
+      setImage((prevState: any) => ({
+        ...prevState,
+        aspectRatio: imageSize.aspectRatio,
+        width: imageSize.width,
+        height: imageSize.height,
+      }))
+      setNewTransformation(transformationType.config)
+
+      return onChangeField(value);
     }
 
     const onInputChangeHandler = (fieldName: string, value:string, type:string,  onChangeField: (value: string) => void) => {
-      
+      debounce(() => {
+        setNewTransformation((prevState: any) => ({
+          ...prevState,
+          [type]: {
+            ...prevState?.[type],
+            [fieldName === 'prompt' ? 'prompt' : 'to']: value
+          },
+        }))
+        return onChangeField(value);
+      }, 1000)
     }
 
-    const onTransformHandler = () => {
 
+    // TODO: Update credits
+    const onTransformHandler = async () => {
+      setIsTransforming(true)
+      setTransformationConfig(deepMergeObjects(newTransformation, transformationConfig))
+
+      setNewTransformation(null)
+
+      startTransition(async () => {
+        // await updateCredits(userId, creditFee)
+      })
     }
 
   return (
@@ -174,9 +203,6 @@ const TransformationForm = ({action, data = null, userId, type, creditBalance, c
             {isSubmitting ? "Submitting..." : "Save Image"}
           </Button>
         </div>
-
-
-
       </form>
     </Form>
     </>

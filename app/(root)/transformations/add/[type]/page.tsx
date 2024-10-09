@@ -45,12 +45,14 @@ const AddTransformationTypePage = ({params: {type}}:SearchParamProps) => {
         title={transformation.title} 
         subtitle={transformation.subTitle}
         />
-        <TransformationForm 
-          action='Add'
-          userId={userId}
-          type={transformation.type as TransformationTypeKey}
-          creditBalance={creditBalance}
-        />
+        <section>
+          <TransformationForm 
+            action='Add'
+            userId={userId}
+            type={transformation.type as TransformationTypeKey}
+            creditBalance={creditBalance}
+          />
+        </section>
     </>
   )
 }
