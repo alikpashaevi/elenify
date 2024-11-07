@@ -103,7 +103,27 @@ const TransformationForm = ({action, data = null, userId, type, creditBalance, c
       setNewTransformation(null)
 
       startTransition(async () => {
-        // await updateCredits(userId, creditFee)
+        const concatCredit = async () => {
+          try {
+            const token = localStorage.getItem('token');
+            const response = await fetch('http://localhost:4000/api/updateCredits', {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+              
+            });
+            if (response.ok) {
+              const data = await response.json();
+              console.log(data)
+            } else {
+              console.log('Error updating credits')
+            }
+          } catch (error) {
+            console.error('Error updating credits:', error);
+          }
+        }
       })
     }
 

@@ -45,7 +45,7 @@ const SignUpPage = () => {
 
         // Set a success message or navigate
         setMessage('Register successful');
-        navigate.push('/'); // Redirect to homepage or profile page
+        navigate.push('/login'); // Redirect to homepage or profile page
 
       } else {
         // Handle invalid credentials
