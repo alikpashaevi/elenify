@@ -103,7 +103,7 @@ const TransformationForm = ({action, data = null, userId, type, creditBalance, c
       setNewTransformation(null)
 
       startTransition(async () => {
-        const concatCredit = async () => {
+        // const concatCredit = async () => {
           try {
             const token = localStorage.getItem('token');
             const response = await fetch('http://localhost:4000/api/updateCredits', {
@@ -117,13 +117,14 @@ const TransformationForm = ({action, data = null, userId, type, creditBalance, c
             if (response.ok) {
               const data = await response.json();
               console.log(data)
+              creditBalance = data
             } else {
               console.log('Error updating credits')
             }
           } catch (error) {
             console.error('Error updating credits:', error);
           }
-        }
+        // }
       })
     }
 
